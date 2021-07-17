@@ -1,3 +1,5 @@
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 import Fastify from 'fastify'
 import fastifyStatic from 'fastify-static'
 import path from 'path'

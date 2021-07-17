@@ -1,23 +1,44 @@
-import _toConsumableArray from "/home/vitorino/tau/sarscheck/node_modules/@babel/runtime/helpers/esm/toConsumableArray";
-import _asyncToGenerator from "/home/vitorino/tau/sarscheck/node_modules/@babel/runtime/helpers/esm/asyncToGenerator";
-import "regenerator-runtime/runtime.js";
-import "core-js/modules/es.array.join.js";
-import "core-js/modules/es.object.to-string.js";
-import "core-js/modules/es.array.concat.js";
-import "core-js/modules/es.array.filter.js";
-import "core-js/modules/web.dom-collections.iterator.js";
-import "core-js/modules/es.string.iterator.js";
-import "core-js/modules/es.array.map.js";
-import webpush from 'web-push';
-import { publicKey, privateKey } from './keys.js';
-import fse from 'fs-extra';
-import fs from 'fs';
-import path from 'path';
-webpush.setVapidDetails('mailto:thiagobrasilia@gmail.com', publicKey, privateKey);
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.notifyAllSubscriptions = exports.receiveSubscription = void 0;
+
+var _webPush = _interopRequireDefault(require("web-push"));
+
+var _keys = require("./keys.js");
+
+var _fsExtra = _interopRequireDefault(require("fs-extra"));
+
+var _fs = _interopRequireDefault(require("fs"));
+
+var _path = _interopRequireDefault(require("path"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+_webPush.default.setVapidDetails('mailto:thiagobrasilia@gmail.com', _keys.publicKey, _keys.privateKey);
+
 var filePath = "subscriptions.json";
 
 var getFilePath = function getFilePath() {
-  return path.join(process.cwd(), 'dist/server', filePath);
+  return _path.default.join(process.cwd(), 'dist/server', filePath);
 };
 
 var getSubscriptions = function getSubscriptions() {
@@ -29,7 +50,7 @@ var getSubscriptions = function getSubscriptions() {
           switch (_context.prev = _context.next) {
             case 0:
               try {
-                file = fs.readFileSync(getFilePath(), 'utf-8');
+                file = _fs.default.readFileSync(getFilePath(), 'utf-8');
                 json = JSON.parse(file);
                 resolve(json);
               } catch (e) {
@@ -64,7 +85,8 @@ var saveSubscriptions = function saveSubscriptions(json) {
           switch (_context2.prev = _context2.next) {
             case 0:
               try {
-                fse.writeFileSync(getFilePath(), JSON.stringify(json));
+                _fsExtra.default.writeFileSync(getFilePath(), JSON.stringify(json));
+
                 resolve(true);
               } catch (e) {
                 reject(e);
@@ -94,7 +116,7 @@ var receiveSubscription = function receiveSubscription(subscription) {
             case 0:
               _context3.prev = 0;
               _context3.next = 3;
-              return fse.ensureFile(getFilePath());
+              return _fsExtra.default.ensureFile(getFilePath());
 
             case 3:
               _context3.next = 5;
@@ -143,6 +165,8 @@ var receiveSubscription = function receiveSubscription(subscription) {
 */
 
 
+exports.receiveSubscription = receiveSubscription;
+
 var notifyAllSubscriptions = /*#__PURE__*/function () {
   var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(message) {
     var _yield$getSubscriptio, _yield$getSubscriptio2, subscriptions, results;
@@ -162,7 +186,7 @@ var notifyAllSubscriptions = /*#__PURE__*/function () {
             _context4.prev = 6;
             _context4.next = 9;
             return Promise.all(subscriptions.map(function (subscription) {
-              return webpush.sendNotification(subscription, message);
+              return _webPush.default.sendNotification(subscription, message);
             }));
 
           case 9:
@@ -190,4 +214,4 @@ var notifyAllSubscriptions = /*#__PURE__*/function () {
   };
 }();
 
-export { receiveSubscription, notifyAllSubscriptions };
+exports.notifyAllSubscriptions = notifyAllSubscriptions;

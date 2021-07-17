@@ -1,11 +1,24 @@
-import _asyncToGenerator from "/home/vitorino/tau/sarscheck/node_modules/@babel/runtime/helpers/esm/asyncToGenerator";
-import "regenerator-runtime/runtime.js";
-import "core-js/modules/es.array.join.js";
-import Fastify from 'fastify';
-import fastifyStatic from 'fastify-static';
-import path from 'path';
-import { receiveSubscription, notifyAllSubscriptions } from './notification.js';
-var fastify = Fastify({
+"use strict";
+
+require("core-js/stable");
+
+require("regenerator-runtime/runtime");
+
+var _fastify = _interopRequireDefault(require("fastify"));
+
+var _fastifyStatic = _interopRequireDefault(require("fastify-static"));
+
+var _path = _interopRequireDefault(require("path"));
+
+var _notification = require("./notification.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+var fastify = (0, _fastify.default)({
   logger: true
 });
 /*
@@ -13,8 +26,8 @@ var fastify = Fastify({
 */
 // fastify.get("/*", fastify.use('/css/*', serveStatic('../client')))
 
-fastify.register(fastifyStatic, {
-  root: path.join(process.cwd(), 'dist/client')
+fastify.register(_fastifyStatic.default, {
+  root: _path.default.join(process.cwd(), 'dist/client')
 });
 fastify.post('/subscribe', /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(req, reply) {
@@ -25,7 +38,7 @@ fastify.post('/subscribe', /*#__PURE__*/function () {
           case 0:
             parsedBody = JSON.parse(req.body);
             _context.next = 3;
-            return receiveSubscription(parsedBody.subscription);
+            return (0, _notification.receiveSubscription)(parsedBody.subscription);
 
           case 3:
             operationResult = _context.sent;
@@ -61,7 +74,7 @@ fastify.get('/notify', /*#__PURE__*/function () {
             /*
             	Notificando
             */
-            notifyAllSubscriptions("Notificação " + Date.now());
+            (0, _notification.notifyAllSubscriptions)("Notificação " + Date.now());
             reply.send("ok");
 
           case 2:
