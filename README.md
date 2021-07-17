@@ -1,4 +1,4 @@
-# sarscheck
+# scheck
 
 ## Project setup
 ```
